@@ -1,0 +1,105 @@
+.container, .main-map, .main-panel, .panel, .main-panel .layui-card-body,.chat {
+    height: 100%;
+}
+
+/*头部*/
+.layui-header {
+    /*color: goldenrod;*/
+    height: 60px;
+}
+
+.layui-header * {
+    text-align: center;
+    line-height: 60px;
+}
+
+.layui-main h1 a{
+    /*background-color: white;*/
+    color: goldenrod;
+}
+
+.layui-nav {
+    /*background-color: darkgray;*/
+}
+
+/*中心*/
+.top {
+    /*height: 44rem;*/
+    height: 75%;
+}
+
+/*地图部分*/
+.main-map {
+    background: url(../images/map.jpg) no-repeat;
+    background-size: 100% 100%;
+    background-origin: content-box;
+    padding: 15px;
+}
+
+/*个人信息面板*/
+.main-panel {
+    overflow-y: auto;
+}
+
+.main-panel > .layui-fluid {
+    padding: 0.5rem;
+    overflow-y: auto;
+}
+
+.panel {
+
+}
+
+.layui-colla-title {
+
+}
+
+.main-panel .layui-card-header {
+    line-height: 42px;
+    text-align: center;
+    font-size: 16px;
+    border-bottom: #c2c2c2 1px solid;
+}
+
+.main-panel .layui-card-body {
+    color: #393D49;
+}
+
+.layui-colla-content {
+    background-color: white;
+}
+
+/*底部*/
+.footer {
+    /*border: #c2c2c2 0.7rem solid;*/
+    height: 18%;
+    display: block;
+    width: 100%;
+}
+
+.chat {
+    /*background-color: #000;*/
+}
+
+.chat-title {
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.chat-content{
+    height: 84%;
+    background-color: white;
+    padding: 5px;
+}
+
+.chat-detail{
+    overflow-y: auto;
+    height: 9rem;
+    border:1px #c2c2c2 solid;
+}
+
+.layui-textarea{
+    width:30rem;
+}
+
+
