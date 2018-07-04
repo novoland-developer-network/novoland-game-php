@@ -1,4 +1,4 @@
-.bg{
+body {
     width: 100%;
     height: 100%;
     z-index: 0;
@@ -9,23 +9,30 @@
     -o-background-size: cover;
     background-size: cover;
 }
-.title{
+
+.title {
     margin: 25% 0 0;
 }
 
-.title h1{
+.title h1 {
     text-align: center;
     color: white;
 }
 
-.form{
+.form {
     margin-top: 1rem;
-    padding: 1rem 10rem;
+    /*padding: 1rem 10rem;*/
 }
 
-.layui-input-block{
-
+.layui-form-item{
+    margin-left: auto;
 }
+
+.layui-input-block {
+    width: 300px;
+    margin:auto;
+}
+
 
 /*头部*/
 .layui-header {
@@ -38,7 +45,7 @@
     line-height: 60px;
 }
 
-.layui-main h1 a{
+.layui-main h1 a {
     /*background-color: white;*/
     color: goldenrod;
 }

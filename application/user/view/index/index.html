@@ -19,7 +19,6 @@
 			</ul>
 		</div>
 		<!--头部end-->
-		<div class="bg">
 			<div class="layui-container">
 				
 				<!--标题-->
@@ -29,26 +28,25 @@
 					</div>
 				</div>
 				
-				<!--表单-->
-				<div class="form">
-					<form action="" class="layui-form ">
-						<div class="layui-form-item">
-							<div class="layui-input-block">
-								<input type="text" name="username" id="username" required lay-verify="required" placeholder="用户名"
-											 autocomplete="true" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item">
-							<div class="layui-input-block">
-								<input type="password" name="password" id="password" required lay-verify="required" placeholder="请输入密码"
-											 autocomplete="off" class="layui-input">
-							</div>
-						</div>
-					</form>
-				</div>
-				
 			</div>
+		<div class="layui-container form">
+			<!--表单-->
+			<form action="" class="layui-form">
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<input type="text" name="username" id="username" required lay-verify="required" placeholder="用户名"
+									 autocomplete="true" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<input type="password" name="password" id="password" required lay-verify="required" placeholder="请输入密码"
+									 autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</form>
 		</div>
+		
 		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
 		<!--[if lt IE 9]>
 		<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
