@@ -6,19 +6,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
 		<link rel="stylesheet" href="__STATIC__/wiki/css/main.css">
-		<link rel="stylesheet" href="__STATIC__/user/css/index.css">
+		<link rel="stylesheet" href="__STATIC__/user/css/sign_in.css">
 	</head>
 	<body>
 		<!--头部start-->
 		<div class="layui-header layui-bg-black">
 			<div class="layui-main">
 				<h1>
-					<a>九州</a>
+					<a href="/">九州</a>
 				</h1>
 			</div>
 			<ul class="layui-nav layui-layout-right">
 				<li class="layui-nav-item">
-					<a href="{:url('User/Index/signIn')}" class="layui-btn-container">注册</a>
+					<a href="{:url('index')}" class="layui-btn-container">登录</a>
 				</li>
 			</ul>
 		</div>
@@ -28,14 +28,14 @@
 			<!--标题-->
 			<div class="layui-row">
 				<div class="title">
-					<h1>登录</h1>
+					<h1>注册</h1>
 				</div>
 			</div>
 		
 		</div>
 		<div class="layui-container form">
 			<!--表单-->
-			<form action="{:url('login')}" class="layui-form">
+			<form action="" class="layui-form">
 				<div class="layui-row">
 					<div class="layui-col-md6 layui-col-md-offset3 layui-col-sm12 layui-col-xs12">
 						<input type="text" name="username" id="username" required lay-verify="required" placeholder="用户名" autocomplete="true" class="layui-input">
@@ -50,10 +50,10 @@
 				<div class="layui-row layui-col-space20">
 					<div
 							class="layui-col-md1 layui-col-md-offset5 layui-col-sm6 layui-col-sm-offset3 layui-col-xs12">
-						<button type="button" class="submit layui-btn layui-btn-fluid">登录</button>
+						<button class="layui-btn layui-btn-fluid" lay-submit>登录</button>
 					</div>
 					<div class="layui-col-md1 layui-col-sm6 layui-col-xs12">
-						<a href="{:url('User/Index/signIn')}" class="layui-btn layui-btn-warm layui-btn-fluid">注册</a>
+						<a class="layui-btn layui-btn-warm layui-btn-fluid">注册</a>
 					</div>
 				</div>
 			</form>
@@ -64,29 +64,13 @@
 		<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
 		<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
-		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 		<script src="__STATIC__/layui/layui.js"></script>
 		<script>
+        layui.use('jquery', function () {
+
+        });
         layui.use('form', function () {
             var form = layui.form;
-        });
-        layui.use('layer', function () {
-            var layer = layui.layer;
-            var post_url = $("form").attr("action");
-            $(".submit").click(function () {
-                $.post(post_url, {
-                    "username":$("input[name='username']").val(),
-                    "password":$("input[name='password']").val()
-								}, function (res) {
-                    var code = res.code;
-                    var msg = res.msg;
-                    if (code !== 0 && code !== '0') {
-                        layer.msg(msg, {icon: 2});
-                    }else{
-                        layer.msg(msg,{icon:1});
-										}
-                },'json');
-            });
         });
 		</script>
 	</body>

@@ -3,8 +3,7 @@ body {
     height: 100%;
     z-index: 0;
     display: inline-block;
-    background: url(../images/war-bg.jpg) no-repeat center fixed;
-    /*background: url(../images/blood-moon.jpg) no-repeat center fixed;*/
+    background: url(../images/blood-moon.jpg) no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -17,7 +16,7 @@ body {
 
 .title h1 {
     text-align: center;
-    /*color: white;*/
+    color: white;
 }
 
 .form {
@@ -46,10 +45,6 @@ body {
 }
 
 .layui-main h1 a {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    padding: auto;
     /*background-color: white;*/
     color: goldenrod;
 }

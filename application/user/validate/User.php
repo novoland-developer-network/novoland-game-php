@@ -14,6 +14,18 @@ class User extends Validate
 {
 	protected $rule = [
 		'username'=>'require|alphaDash',
-		'password' => ''
+		'password' => 'require|alphaDash',
+	];
+	
+	protected $scene = [
+		'login' => [
+			'username',
+			'password'
+		]
+	];
+	
+	protected $field = [
+		'username' => '用户名',
+		'password' => '密码'
 	];
 }
