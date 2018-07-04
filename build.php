@@ -18,18 +18,19 @@ return [
 	],
 	
 	// 定义demo模块的自动生成 （按照实际定义的文件名生成）
-	'wiki'     => [
+	'user'     => [
 		'__file__'   => [ 'common.php' ],
 		'__dir__'    => [
 			'behavior',
 			'controller',
 			'model',
-			'view'
+			'view',
+			'validate'
 		],
 		'controller' => [
 			'Index',
-			'Test',
-			'UserType'
+			// 'Test',
+			// 'UserType'
 		],
 		'model'      => [
 			'User',
@@ -37,8 +38,10 @@ return [
 		],
 		'view'       => [
 			'index/index',
-			'index/'
 		],
+		'validate' => [
+			''
+		]
     ],
 	// 其他更多的模块定义
 ];

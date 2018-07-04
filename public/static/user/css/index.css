@@ -1,0 +1,48 @@
+.bg{
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: inline-block;
+    background: url(../images/blood-moon.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.title{
+    margin: 25% 0 0;
+}
+
+.title h1{
+    text-align: center;
+    color: white;
+}
+
+.form{
+    margin-top: 1rem;
+    padding: 1rem 10rem;
+}
+
+.layui-input-block{
+
+}
+
+/*头部*/
+.layui-header {
+    /*color: goldenrod;*/
+    height: 60px;
+}
+
+.layui-header * {
+    text-align: center;
+    line-height: 60px;
+}
+
+.layui-main h1 a{
+    /*background-color: white;*/
+    color: goldenrod;
+}
+
+.layui-nav {
+    /*background-color: darkgray;*/
+}

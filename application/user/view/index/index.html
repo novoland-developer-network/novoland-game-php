@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>登录</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+		<link rel="stylesheet" href="__STATIC__/wiki/css/main.css">
+		<link rel="stylesheet" href="__STATIC__/user/css/index.css">
+	</head>
+	<body>
+		<!--头部start-->
+		<div class="layui-header layui-bg-black">
+			<div class="layui-main"></div>
+			<ul class="layui-nav layui-layout-right">
+				<li class="layui-nav-item">
+					<a href="#" class="layui-btn-container">登录</a>
+				</li>
+			</ul>
+		</div>
+		<!--头部end-->
+		<div class="bg">
+			<div class="layui-container">
+				
+				<!--标题-->
+				<div class="layui-row">
+					<div class="title">
+						<h1>九州wiki</h1>
+					</div>
+				</div>
+				
+				<!--表单-->
+				<div class="form">
+					<form action="" class="layui-form ">
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<input type="text" name="username" id="username" required lay-verify="required" placeholder="用户名"
+											 autocomplete="true" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<input type="password" name="password" id="password" required lay-verify="required" placeholder="请输入密码"
+											 autocomplete="off" class="layui-input">
+							</div>
+						</div>
+					</form>
+				</div>
+				
+			</div>
+		</div>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+		<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+		<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<script src="__STATIC__/layui/layui.js"></script>
+		<script>
+			layui.use('jquery',function () {
+					
+      });
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+		</script>
+	</body>
+</html>
