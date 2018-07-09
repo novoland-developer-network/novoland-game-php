@@ -9,9 +9,11 @@
 namespace app\user\controller;
 
 use app\user\model\User;
+use Error;
 use think\Controller;
 use think\Loader;
 use think\Request;
+use think\Session;
 
 /**
  * 用户控制器
@@ -26,16 +28,23 @@ class Index extends Controller
 	 */
 	public function index ()
 	{
+		if ( !empty(Session::get('user')) && !empty(Session::get('user.user_id')) ) {
+			$this->redirect("/");
+		}
+		
 		return $this->fetch();
 	}
 	
 	/**
-	 * login
+	 * 登录操作
+	 * @return array
+	 * @throws \think\Exception
 	 * @throws \think\db\exception\DataNotFoundException
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\exception\DbException
 	 */
 	public function login ()
+	: array
 	{
 		try {
 			// 参数过滤
@@ -43,14 +52,16 @@ class Index extends Controller
 			                 ->param();
 			$validate = Loader::validate('user');
 			if ( !$validate->scene('login')
-			               ->check($params) ) throw new \Error($validate->getError(), 10301);
+			               ->check($params) ) throw new Error($validate->getError(), 10301);
 			
 			// 登录验证
 			$result = (new User())->login($params['username'], $params['password']);
-			if ( $result['code'] !== 0 ) throw new \Error($result['msg'], $result['code']);
+			if ( $result['code'] !== 0 ) throw new Error($result['msg'], $result['code']);
+			
+			Session::set('user', $result['data']);
 			
 			return $result;
-		} catch ( \Error $e ) {
+		} catch ( Error $e ) {
 			return [
 				'data' => null,
 				'code' => $e->getCode(),
@@ -67,5 +78,38 @@ class Index extends Controller
 	public function signIn ()
 	{
 		return $this->fetch();
+	}
+	
+	/**
+	 * 注册操作
+	 * @return array
+	 */
+	public function register ()
+	: array
+	{
+		try {
+			// 过滤参数
+			$params = Request::instance()
+			                 ->param();
+			$validate = Loader::validate('User');
+			
+			if ( !$validate->scene('register')
+			               ->check($params) ) throw new Error($validate->getError(), 10311);
+			
+			unset($params['repassword'], $params['captcha']);
+			
+			// 注册
+			$result = (new User)->register($params);
+			
+			if ( $result['code'] !== 0 ) throw new Error($result['msg'], $result['code']);
+			
+			return $result;
+		} catch ( Error $error ) {
+			return [
+				'code' => $error->getCode(),
+				'msg'  => $error->getMessage(),
+				'data' => null
+			];
+		}
 	}
 }

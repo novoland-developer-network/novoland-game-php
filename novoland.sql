@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-07-04 21:51:15
+Date: 2018-07-09 17:45:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,3 +32,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_user_id_uindex` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
