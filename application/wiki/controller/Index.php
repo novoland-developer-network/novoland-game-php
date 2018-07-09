@@ -25,6 +25,8 @@ class Index extends Controller
 			return false;
 		}
 		
+		$this->assign(Session::get('user'));
+		
 		return $this->fetch();
 	}
 }

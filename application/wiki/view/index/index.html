@@ -26,7 +26,10 @@
 				</div>
 				<ul class="layui-nav layui-layout-right">
 					<li class="layui-nav-item">
-						<a href="javascript:void(0);" class="layui-btn-container">个人中心</a>
+						<a href="javascript:void(0);" class="layui-btn-container">{$username}</a>
+					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:void(0);" class="layui-btn-container logout">退出登录</a>
 					</li>
 				</ul>
 			</div>
@@ -125,5 +128,21 @@
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 		<script src="static/layui/layui.js"></script>
 		<script src="static/wiki/js/index.js"></script>
+		<script>
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(function () {
+                $(".logout").click(function () {
+                    layer.confirm('确定要离开了吗？', {icon: 3, title: ''}, function (index) {
+                        layer.close(index);
+                        layer.msg("所谓弃族的命运<br>就是要穿越荒原<br>再次竖起战旗<br>返回故乡<br>死不可怕<br>只是一场长眠", {time: 8000});
+                        setTimeout(function () {
+                            window.location.href = "{:url('User/Index/logout')}";
+                        }, 8500);
+                    });
+                });
+            });
+        });
+		</script>
 	</body>
 </html>

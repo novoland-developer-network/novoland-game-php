@@ -112,4 +112,19 @@ class Index extends Controller
 			];
 		}
 	}
+	
+	/**
+	 * 退出登录
+	 * @throws \think\Exception
+	 */
+	public function logout ()
+	{
+		// 清除session（当前作用域）
+		Session::clear();
+		// 清除think作用域
+		Session::clear('think');
+		// 清除当前请求有效的session
+		Session::flush();
+		$this->redirect('/');
+	}
 }

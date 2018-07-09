@@ -47,7 +47,7 @@ class User extends Model
 			return [
 				'data' => $userInfo,
 				'code' => 0,
-				'msg'  => '验证成功，正在和九州进行连接。祝你好运，铁甲依然在！'
+				'msg'  => '验证成功，正在和九州进行连接。<br>祝你好运，铁甲依然在！'
 			];
 		} catch ( \Error $e ) {
 			return [
@@ -95,7 +95,7 @@ class User extends Model
 			return [
 				'data' => $result,
 				'code' => 0,
-				'msg'  => '信息已录入！欢迎进入九州，请准备登录，星辰在上，指引你的道路！'
+				'msg'  => '信息已录入！<br>欢迎进入九州，请准备登录<br>星辰在上，指引你的道路！'
 			];
 		} catch ( \Error $error ) {
 			return [
