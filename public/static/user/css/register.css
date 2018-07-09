@@ -36,7 +36,7 @@ body {
     /*background-color: darkgray;*/
 }
 
-.register{
+.register {
     margin-top: 5rem;
     margin-bottom: 1rem;
 }
@@ -45,9 +45,9 @@ body {
 .form {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    border-radius:.8rem;
+    /*border-radius:.8rem;*/
 }
 
-code{
+code {
     color: red;
 }

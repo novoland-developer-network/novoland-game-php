@@ -75,8 +75,8 @@
             var post_url = $("form").attr("action");
             $(".submit").click(function () {
                 $.post(post_url, {
-                    "username":$("input[name='username']").val(),
-                    "password":$("input[name='password']").val()
+                    "username": $.trim($("input[name='username']").val()),
+                    "password": $.trim($("input[name='password']").val())
 								}, function (res) {
                     var code = res.code;
                     var msg = res.msg;
@@ -84,6 +84,9 @@
                         layer.msg(msg, {icon: 2});
                     }else{
                         layer.msg(msg,{icon:1});
+                        setTimeout(function () {
+                            window.location.href = "/";
+                        }, 3000)
 										}
                 },'json');
             });

@@ -19,7 +19,11 @@ class Index extends Controller
 	 */
 	public function index ()
 	{
-		if ( empty(Session::get('', '_user')) || empty(Session::get('_user.user_id')) ) $this->redirect(Url::build('User/Index/index'));
+		if ( empty(Session::get('user')) || empty(Session::get('user.user_id')) ) {
+			$this->redirect(Url::build('User/Index/index'));
+			
+			return false;
+		}
 		
 		return $this->fetch();
 	}
