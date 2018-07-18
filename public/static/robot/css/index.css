@@ -1,0 +1,12 @@
+#main {
+    height: 40rem;
+    border: #c2c2c2 1px solid;
+    overflow-y: auto;
+}
+
+.tips {
+    height: 4rem;
+    line-height: 4rem;
+    text-align: center;
+    font-size: 2rem;
+}
