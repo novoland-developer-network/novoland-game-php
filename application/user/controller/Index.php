@@ -128,4 +128,9 @@ class Index extends Controller
 		Session::flush();
 		$this->redirect('/');
 	}
+	
+	public function logAsBbs ()
+	{
+	return $this->fetch();
+	}
 }
