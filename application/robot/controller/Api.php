@@ -8,9 +8,13 @@
 
 namespace app\robot\controller;
 
-
 use think\Controller;
 
+/**
+ * Class Api
+ * 百度Unit2.0API调用控制器
+ * @package app\robot\controller
+ */
 class Api extends Controller
 {
 	
@@ -27,6 +31,11 @@ class Api extends Controller
 		echo(self::send('1!@#$%$2y$10$FXQYkFbnirCxYg3Fo0tTgedXYKoTO3L6JpUIPssbv8htL5WqppLNO!@#$%'));
 	}
 	
+	/**
+	 * send
+	 * @param $content
+	 * @return bool|mixed
+	 */
 	public static function send ($content)
 	{
 		$array = explode('!@#$%', $content);

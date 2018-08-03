@@ -8,11 +8,19 @@
 
 namespace app\robot\controller;
 
-
 use think\Controller;
 
+/**
+ * 机器人训练控制器
+ * @package app\robot\controller
+ */
 class Index extends Controller
 {
+	/**
+	 * index
+	 * @return mixed
+	 * @throws \think\Exception
+	 */
 	public function index ()
 	{
 		$client_id = password_hash(time() . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);

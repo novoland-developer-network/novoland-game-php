@@ -9,7 +9,7 @@
 namespace app\user\controller;
 
 use app\user\model\User;
-use Error;
+use \Error;
 use think\Controller;
 use think\Loader;
 use think\Request;
@@ -83,6 +83,7 @@ class Index extends Controller
 	/**
 	 * 注册操作
 	 * @return array
+	 * @throws \think\Exception
 	 */
 	public function register ()
 	: array

@@ -8,9 +8,13 @@
 
 namespace app\robot\controller;
 
-
 use think\worker\Server;
 
+/**
+ * Class Worker
+ * WorkerMan-Socket控制器
+ * @package app\robot\controller
+ */
 class Worker extends Server
 {
 	protected $socket = 'websocket://novoland.game:9999';
