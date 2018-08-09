@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>Novoland AI Practise</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+		<link rel="stylesheet" href="__STATIC__/robot/css/index.css">
+	</head>
+	<body>
+		<div class="layui-container">
+			<form action="" class="layui-form">
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<blockquote class="layui-elem-quote">这是一个实验性的功能，目的是收集更多的测试数据集来培养AI</blockquote>
+						<div class="layui-col-md12" id="main">
+						</div>
+						<div id="msg_end" style="height:0px; overflow:hidden"></div>
+					</div>
+					<hr>
+					<div class="layui-form-item">
+						<label class="layui-form-label">Text</label>
+						<div class="layui-input-block">
+							<textarea class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">To</label>
+						<div class="layui-input-block">
+							<button class="layui-btn" id="sub" type="button">To-></button>
+						</div>
+						<input type="hidden" id="session_id" value="">
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+		<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+		<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+		<script src="__STATIC__/layui/layui.js"></script>
+		<script>
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+		</script>
+		<script>
+        var client_id = "{$client_id}";
+        var ws = new WebSocket("ws://novoland.game:9999");
+        ws.onopen = function () {
+            console.log("连接成功");
+        };
+        ws.onmessage = function (e) {
+            console.log(e.data);
+            var div = document.getElementById('main');
+            $("#main").append(receiveMsg(e.data));
+            $("#session_id").val(e.session_id);
+            div.scrollTop = div.scrollHeight;
+        };
+        $("#sub").click(function () {
+            var session_id = $("#session_id").val();
+            var sendContent = $("textarea").val(), sendHash = sendContent + '!@#$%' + client_id + '!@#$%' + session_id;
+            var div = document.getElementById('main');
+            ws.send(sendHash);
+            $("#main").append(sendMsg(sendContent));
+            div.scrollTop = div.scrollHeight;
+            $("textarea").focus().val("");
+        });
+        $(document).keyup(function (event) {
+            if (event.keyCode === 13) {
+                var sendContent = $("textarea").val();
+                var div = document.getElementById('main');
+                ws.send(sendContent);
+                $("#main").append(sendMsg(sendContent));
+                div.scrollTop = div.scrollHeight;
+                $("textarea").focus().val("");
+
+            }
+        });
+		</script>
+		<script>
+        function sendMsg(content) {
+            return `<fieldset class="layui-elem-field layui-field-title">
+								<legend>you</legend>
+								<div class="layui-field-box">
+									${content}
+								</div>
+							</fieldset>`;
+        }
+
+        function receiveMsg(content) {
+            return `<fieldset class="layui-elem-field layui-field-title layui-bg-gray">
+								<legend>AI</legend>
+								<div class="layui-field-box">
+									${content}
+								</div>
+							</fieldset>`;
+        }
+		</script>
+	</body>
+</html>

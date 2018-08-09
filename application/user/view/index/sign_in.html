@@ -134,7 +134,8 @@
                 form_data.email = $.trim($("input[name='email']").val());
                 form_data.qq = $.trim($("input[name='qq']").val());
                 form_data.captcha = $.trim($("input[name='captcha']").val());
-
+								form_data.bbs_id = "{$bbs_id}";
+                
                 $.ajax({
                     url: "{:url('register')}",
                     dataType: "json",
@@ -157,6 +158,7 @@
                             console.log('code is ' + c);
                             layer.msg(m, {icon: 2});
                             $(".captcha").attr("src", "{:captcha_src()}");
+                            $("#captcha").val("");
                         }
                     },
                     error: function (e) {
