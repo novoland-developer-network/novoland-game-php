@@ -95,7 +95,7 @@ class Api extends Controller
 	 * @param string $param
 	 * @return bool|mixed - http response body if succeeds, else false.
 	 */
-	private static function request_post ($url = '', $param = '')
+	public static function request_post ($url = '', $param = '')
 	{
 		if ( empty($url) || empty($param) ) {
 			return false;

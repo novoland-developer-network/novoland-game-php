@@ -35,7 +35,7 @@
 		</div>
 		<div class="layui-container form">
 			<!--表单-->
-			<form action="{:url('login')}" class="layui-form">
+			<form action="{:url('loginBbs')}" class="layui-form" method="post">
 				<div class="layui-form-item">
 					<input type="text" name="username" id="username" required lay-verify="required" placeholder="用户名" autocomplete="true" class="layui-input">
 				</div>
@@ -45,12 +45,12 @@
 				
 				<div class="layui-row">
 					<div class="layui-col-md4 layui-col-md-offset4">
-						<button type="button" class="submit layui-btn layui-btn-fluid">使用论坛账号登录</button>
+						<button type="button" class="submit layui-btn layui-btn-fluid">登录</button>
 					</div>
 				</div>
 				<div class="layui-row">
 					<div class="layui-col-md4 layui-col-md-offset4">
-						<a href="{:url('index')}" class="logAsBBS layui-btn layui-btn-primary layui-btn-fluid">跳转到游戏账号登录</a>
+						<a href="{:url('index')}" class="layui-btn layui-btn-primary layui-btn-fluid">没有论坛账号？使用游戏账号登录→</a>
 					</div>
 				</div>
 			</form>
@@ -77,13 +77,24 @@
                 }, function (res) {
                     var code = res.code;
                     var msg = res.msg;
-                    if (code !== 0 && code !== '0') {
-                        layer.msg(msg, {icon: 2});
-                    } else {
-                        layer.msg(msg, {icon: 1});
+                    if (code === 0 || code === '0') {
+                        layer.msg(msg,{icon:1});
                         setTimeout(function () {
-                            window.location.href = "/";
-                        }, 3000)
+                            window.location.href="/";
+                        },3000);
+                    }else {
+                        if(code === 2 || code === "2") {
+                            layer.confirm(msg, {
+                                title: '',
+                                btn: ['已有账户，去登录', '还没有，去注册一个']
+                            }, function () {
+                                window.location.href = "{:url('index')}";
+                            }, function () {
+                                window.location.href = "{:url('signIn')}";
+                            });
+                        }else{
+                            layer.msg(msg, {icon: 2});
+                        }
                     }
                 }, 'json');
             });
