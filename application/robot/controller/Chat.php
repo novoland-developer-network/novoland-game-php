@@ -8,8 +8,8 @@
 
 namespace app\robot\controller;
 
+use app\robot\model\Chat as ChatModel;
 use think\worker\Server;
-use Workerman\Lib\Timer;
 
 /**
  * WorkerMan-chat-Socket控制器
@@ -19,6 +19,7 @@ use Workerman\Lib\Timer;
 class Chat extends Server
 {
 	const HEARTBEAT_TIME = 55;
+	
 	protected $socket    = 'websocket://novoland.game:4619';
 	protected $processes = 1;
 	
@@ -26,11 +27,12 @@ class Chat extends Server
 	 * 收到信息
 	 * @param $connection
 	 * @param $data
+	 * @return void
 	 */
 	public function onMessage ($connection, $data)
 	: void
 	{
-		$connection->lastMessageTime = time();
+		// $connection->lastMessageTime = time();
 		if ( !isset($connection->uid) ) {
 			// 没验证的话把第一个包当做uid，即客户端发送过来的uuid
 			$connection->uid = $data;
@@ -41,11 +43,12 @@ class Chat extends Server
 			
 			return;
 		}
+		list($username, $user_id) = \explode(' ', $connection->uid);
 		// uid 为 all 时是全局广播
 		list($rec_uid, $message) = explode(':', $data);
 		// 全局广播
 		if ( $rec_uid === 'all' ) {
-			list($username) = \explode(' ', $connection->uid);
+			$put_res = ChatModel::put([ 'user_id' => $user_id, 'content' => $message, 'chat_id' => 0 ]);
 			$this->sendAll(0, '', [
 				'username' => $username,
 				'content'  => $message,
@@ -57,10 +60,16 @@ class Chat extends Server
 		}
 		// 给特定uid发送
 		else {
-			if ( isset($worker->uidConnections[ $rec_uid ]) ) {
-				$connection = $this->worker->uidConnections[ $rec_uid ];
-				$connection->send($message);
-			}
+			list($rec_username, $rec_user_id) = \explode(' ', $rec_uid);
+			
+			$this->sendTo($rec_uid, $message, $connection, [
+				'username'     => $username,
+				'content'      => $message,
+				'time'         => \date('m-d H:i:s'),
+				'uuid'         => $rec_uid,
+				'rec_username' => $rec_username
+			]);
+			ChatModel::put([ 'user_id' => $user_id, 'content' => $message, 'chat_id' => $rec_user_id ]);
 			
 			return;
 		}
@@ -89,6 +98,32 @@ class Chat extends Server
 			];
 			$json = \json_encode($array);
 			$connection->send($json);
+		}
+	}
+	
+	private function sendTo (string $rec_uid, string $msg, $connection, ?array $data = null)
+	: void
+	{
+		$data['color'] = '#FF5722';
+		$data['uuid'] = $connection->uid;
+		$data['username'] .= '私聊你';
+		$data_self = $data;
+		$data_self['color'] = '#c2c2c2';
+		$data_self['username'] = '发送给' . $data_self['rec_username'];
+		if ( isset($this->worker->uidConnections[ $rec_uid ]) ) {
+			$connection_to = $this->worker->uidConnections[ $rec_uid ];
+			$connection_to->send(\json_encode([
+				                                  'code' => 3,
+				                                  'msg'  => $msg,
+				                                  'data' => $data
+			                                  ]));
+			$connection->send(\json_encode([
+				                               'code' => 3,
+				                               'msg'  => $msg,
+				                               'data' => $data_self
+			                               ]));
+			
+			return;
 		}
 	}
 	
@@ -131,19 +166,19 @@ class Chat extends Server
 	 */
 	public function onWorkerStart ($worker)
 	{
-		Timer::add(1, function()use($worker){
+		/*Timer::add(1, function () use ($worker) {
 			$time_now = time();
-			foreach($worker->connections as $connection) {
+			foreach ( $worker->connections as $connection ) {
 				// 有可能该connection还没收到过消息，则lastMessageTime设置为当前时间
-				if (empty($connection->lastMessageTime)) {
+				if ( empty($connection->lastMessageTime) ) {
 					$connection->lastMessageTime = $time_now;
 					continue;
 				}
 				// 上次通讯时间间隔大于心跳间隔，则认为客户端已经下线，关闭连接
-				if ($time_now - $connection->lastMessageTime > self::HEARTBEAT_TIME) {
+				if ( $time_now - $connection->lastMessageTime > self::HEARTBEAT_TIME ) {
 					$connection->close();
 				}
 			}
-		});
+		});*/
 	}
 }

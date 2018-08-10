@@ -30,7 +30,7 @@
 
 /*地图部分*/
 .main-map {
-    /*background: url(../images/map.jpg) no-repeat;*/
+    background: url(../images/map.jpg) no-repeat;
     background-size: 100% 100%;
     background-origin: content-box;
     padding: 15px;

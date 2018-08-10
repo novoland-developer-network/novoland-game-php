@@ -8,6 +8,9 @@
 
 namespace app\robot\model;
 
+use think\db\exception\BindParamException;
+use think\Exception;
+use think\exception\PDOException;
 use think\Model;
 
 /**
@@ -20,15 +23,16 @@ class Chat extends Model
 	/**
 	 * @param $data
 	 * @return bool
-	 * @throws \think\Exception
-	 * @throws \think\db\exception\BindParamException
-	 * @throws \think\exception\PDOException
 	 */
 	public static function put ($data)
 	: bool
 	{
-		$result = (new Chat($data))->save();
-		
-		return ! !$result;
+		try {
+			$result = (new Chat($data))->save();
+			if ($result !== false) throw new \Error();
+			return true;
+		} catch ( BindParamException|PDOException|Exception|\Error $e ) {
+			return false;
+		}
 	}
 }
