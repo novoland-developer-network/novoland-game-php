@@ -140,7 +140,7 @@
 		</script>
 		<!--ws-chat-->
 		<script>
-        ws = new WebSocket("ws://novoland.doylee.cn:4619");
+        ws = new WebSocket("wss://novoland.doylee.cn/wss");
         ws.onopen = function () {
             var uuid = "{$username} {$user_id} " + guuid();
             ws.send(`${uuid}`);
