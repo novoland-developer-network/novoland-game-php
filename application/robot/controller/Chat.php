@@ -20,7 +20,7 @@ class Chat extends Server
 {
 	const HEARTBEAT_TIME = 55;
 	
-	protected $socket    = 'websocket://novoland.doylee.cn:4619';
+	protected $socket    = 'websocket://0.0.0.0:4619';
 	protected $processes = 1;
 	
 	/**
