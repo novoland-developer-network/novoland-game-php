@@ -112,17 +112,16 @@ class Chat extends Server
 		$data_self['username'] = '发送给' . $data_self['rec_username'];
 		if ( isset($this->worker->uidConnections[ $rec_uid ]) ) {
 			$connection_to = $this->worker->uidConnections[ $rec_uid ];
-			$connection_to->send(\json_encode([
-				                                  'code' => 3,
-				                                  'msg'  => $msg,
-				                                  'data' => $data
-			                                  ]));
 			$connection->send(\json_encode([
 				                               'code' => 3,
 				                               'msg'  => $msg,
 				                               'data' => $data_self
 			                               ]));
-			
+			$connection_to->send(\json_encode([
+				                                  'code' => 3,
+				                                  'msg'  => $msg,
+				                                  'data' => $data
+			                                  ]));
 			return;
 		}
 	}
