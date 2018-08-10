@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Novoland-Wiki</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="static/layui/css/layui.css">
 		<link rel="stylesheet" href="static/wiki/css/main.css">
 		<link rel="stylesheet" href="static/wiki/css/index.css">
@@ -80,40 +80,15 @@
 						<div class="layui-col-lg4 chat-title layui-col-lg-offset4 layui-bg-gray">世界频道</div>
 					</div>
 					<div class="layui-row chat-content">
-						<div
-								class="layui-col-lg5 layui-col-md5 layui-col-md-offset1 layui-col-lg-offset1 chat-detail">
-							<div class="layui-row" style="color:darkgoldenrod">
-								<span>3分钟前</span>
-								<div></div>
-								<span>刀哥：</span>
-								<span>啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</span>
-							</div>
-							<div class="layui-row" style="color: #1E9FFF">
-								<span>2分钟前</span>
-								<div></div>
-								<span>老王：</span>
-								<span>啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</span>
-							</div>
-							<div class="layui-row" style="color: darkred;">
-								<span>1分钟前</span>
-								<div></div>
-								<span>禽兽：</span>
-								<span>啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</span>
-							</div>
-							<div class="layui-row" style="color: darkcyan;">
-								<span>刚刚</span>
-								<div></div>
-								<span>我：</span>
-								<span>啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</span>
-							</div>
-						</div>
-						<div class="layui-col-lg4 layui-col-md4 layui-col-lg-offset1 layui-col-md-offset1 layui-col-sm4">
+						<div id="chat-detail"
+								 class="layui-col-lg5 layui-col-md5 layui-col-md-offset1 layui-col-lg-offset1 chat-detail"></div>
+						<div class="layui-col-lg4 layui-col-md4 layui-col-lg-offset1 layui-col-md-offset1">
 							<form class="layui-form" action="">
 								<div class="layui-form-item">
 									<div class="layui-inline">
 										<div class="layui-input-inline">
-											<textarea class="layui-textarea" title=""></textarea>
-											<button type="submit" lay-submit class="layui-btn-sm layui-btn ">发送</button>
+											<textarea class="layui-textarea send-content" title=""></textarea>
+											<button type="button" class="layui-btn-sm layui-btn chat-send">发送</button>
 										</div>
 									</div>
 								</div>
@@ -133,15 +108,72 @@
             var layer = layui.layer;
             $(function () {
                 $(".logout").click(function () {
-                    layer.confirm('确定要离开了吗？', {icon: 3, title: ''}, function (index) {
+                    layer.confirm("确定要离开了吗？", {icon: 3, title: ''}, function (index) {
                         layer.close(index);
                         layer.msg("所谓弃族的命运<br>就是要穿越荒原<br>再次竖起战旗<br>返回故乡<br>死不可怕<br>只是一场长眠", {time: 8000});
                         setTimeout(function () {
                             window.location.href = "{:url('User/Index/logout')}";
-                        }, 8500);
+                        }, 5500);
                     });
                 });
             });
+        });
+		</script>
+		<!--生成唯一标识用于ws-->
+		<script>
+        //用于生成uuid
+        /**
+         * @return {string}
+         */
+        function S4() {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        }
+
+        function guuid() {
+            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+        }
+		</script>
+		<!--ws-chat-->
+		<script>
+        ws = new WebSocket("ws://novoland.game:4619");
+        ws.onopen = function () {
+            var uuid = "{$username} " + guuid();
+            ws.send(`${uuid}`);
+        };
+        ws.onmessage = function (e) {
+            var res = eval('(' + e.data + ')');
+            var code = res.code, msg = res.msg, data = res.data;
+            if (code === 1 || code === '1') {
+                console.warn(msg);
+                var notice = `<div>
+																<span class="layui-badge layui-bg-cyan" style="display: block;text-align: center">${data[0]} 已上线！</span>
+															</div>`;
+            } else {
+                if (code === 2 || code === '2') {
+                    console.info(msg);
+                    var notice = `<div>
+																		<span class="layui-badge layui-bg-gray" style="display: block;text-align: center">${msg}</span>
+																	</div>`;
+                } else {
+                    var notice = `<div class="layui-row" style="color: ${data.color};">
+																			<span>${data.time}</span>
+																			<div></div>
+																			<span>${data.username}：</span>
+																			<span>${data.content}</span>
+																		</div>`;
+                }
+            }
+            $(".chat-detail").append(notice);
+            var div = document.getElementById('chat-detail');
+            div.scrollTop = div.scrollHeight;
+
+        };
+        $(".chat-send").click(function () {
+            var c = 'all:' + $(".send-content").val();
+            if (c !== 'all:') {
+                ws.send(c);
+            }
+            $(".send-content").val("").focus();
         });
 		</script>
 	</body>
