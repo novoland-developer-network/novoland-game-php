@@ -108,126 +108,24 @@
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 		<script src="static/layui/layui.js"></script>
 		<script src="static/wiki/js/index.js"></script>
-		<!--生成唯一标识用于ws-->
+		<!--layui-->
+		<script src="static/wiki/js/layui_s.js"></script>
 		<script>
-        //用于生成uuid
-        /**
-         * @return {string}
-         */
-        function S4() {
-            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-
-        function guuid() {
-            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-        }
+        var uuid = "{$username} {$user_id} " + guuid();
 		</script>
 		<!--ws-chat-->
+		<script src="static/wiki/js/wss.js"></script>
 		<script>
-        ws = new WebSocket("ws://novoland.game:4619");
-        ws.onopen = function () {
-            var uuid = "{$username} {$user_id} " + guuid();
-            ws.send(`${uuid}`);
-        };
-        ws.onmessage = function (e) {
-            var res = eval('(' + e.data + ')');
-            var code = res.code, msg = res.msg, data = res.data;
-            if (code === 1 || code === '1') {
-                console.warn(msg);
-                var notice = `<div>
-																<span class="layui-badge layui-bg-cyan" style="display: block;text-align: center">${data[0]} 已上线！</span>
-															</div>`;
-            } else {
-                if (code === 2 || code === '2') {
-                    console.info(msg);
-                    var notice = `<div>
-																		<span class="layui-badge layui-bg-gray" style="display: block;text-align: center">${msg}</span>
-																	</div>`;
-                } else {
-                    if (code === 3 || code === '3') {
-                        var notice =
-                            `<div class="layui-row chat-msg" style="color: ${data.color};border: 1px solid #c2c2c2;" uuid="${data.uuid}">
-																			<span>${data.time}</span>
-																			<div></div>
-																			<span class="username">${data.username}：</span>
-																			<span>${data.content}</span>
-																		</div>`;
-                    } else {
-                        var notice = `<div class="layui-row chat-msg" style="color: ${data.color};" uuid="${data.uuid}">
-																			<span>${data.time}</span>
-																			<div></div>
-																			【世界】<span class="username">${data.username}：</span>
-																			<span>${data.content}</span>
-																		</div>`;
-                    }
+        $(function () {
+            $("textarea").focus();
+            /**
+						 * 回车提交聊天
+             */
+            $(document).keyup(function(event){
+                if(event.keyCode ==13){
+                    sendMsg();
                 }
-            }
-            $(".chat-detail").append(notice);
-            var div = document.getElementById('chat-detail');
-            div.scrollTop = div.scrollHeight;
-
-        };
-        // 发送消息
-        $(".chat-send").click(function () {
-            var uuid = $(this).attr("to");
-            var rec_id = uuid === 0 || uuid === '0' ? 'all' : uuid;
-            var content = $(".send-content").val();
-            if (content !== '' && content !== null && content !== undefined) {
-                ws.send(`${rec_id}:${content}`);
-            }
-            $(".send-content").val("").focus();
-        });
-        // 点击发送给指定用户
-        $(".chat-detail").on("click", ".chat-msg", function () {
-            var uuid = $(this).attr("uuid"), username = $(this).find('.username').text();
-            $(".send-content").attr('placeholder', '发送给' + username);
-            $(".chat-send").attr("to", uuid);
-            $(".to-all").show();
-        });
-        $(".to-all").click(function () {
-            $(".send-content").removeAttr("placeholder");
-            $(".chat-send").attr("to", 0);
-            $(this).hide();
-        });
-        setInterval(function () {
-            var uuid = "{$username} {$user_id} " + guuid();
-            ws.send(`heart_beat:${uuid}`);
-        }, 5000);
-		</script>
-		<script>
-        layui.use('layer', function () {
-            var layer = layui.layer;
-            $(function () {
-                $(".logout").click(function () {
-                    layer.confirm("确定要离开了吗？", {icon: 3, title: ''}, function (index) {
-                        layer.close(index);
-                        layer.msg("所谓弃族的命运<br>就是要穿越荒原<br>再次竖起战旗<br>返回故乡<br>死不可怕<br>只是一场长眠", {time: 8000});
-                        setTimeout(function () {
-                            window.location.href = "{:url('User/Index/logout')}";
-                        }, 5500);
-                    });
-                });
             });
-            ws.onerror = function () {
-                layer.confirm('谷玄星干扰了你和九州之间的连接，是否需要立即恢复？', {
-                    icon: 3,
-										title: ''
-								}, function (index) {
-                    layer.close(index);
-                    layer.msg('正在重新连接到九州，请稍后……');
-                    window.location.reload();
-                });
-            };
-            ws.onclose = function () {
-                layer.confirm('谷玄星干扰了你和九州之间的连接，是否需要立即恢复？', {
-                    icon: 3,
-                    title: ''
-                }, function (index) {
-                    layer.close(index);
-                    layer.msg('正在重新连接到九州，请稍后……');
-                    window.location.reload();
-                });
-            };
         });
 		</script>
 	</body>
