@@ -111,7 +111,9 @@
 		<!--layui-->
 		<script src="static/wiki/js/layui_s.js"></script>
 		<script>
-        var uuid = "{$username} {$user_id} " + guuid();
+        var uuid,logout;
+        uuid = "{$username} {$user_id} " + guuid();
+        logout = "{:url('User/Index/logout')}";
 		</script>
 		<!--ws-chat-->
 		<script src="static/wiki/js/wss.js"></script>
