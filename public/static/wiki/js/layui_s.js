@@ -21,7 +21,7 @@ layui.use('layer', function () {
                 layer.close(index);
                 layer.msg("所谓弃族的命运<br>就是要穿越荒原<br>再次竖起战旗<br>返回故乡<br>死不可怕<br>只是一场长眠", {time: 8000});
                 setTimeout(function () {
-                    window.location.href = "{:url('User/Index/logout')}";
+                    window.location.href = logout;
                 }, 5500);
             });
         });
