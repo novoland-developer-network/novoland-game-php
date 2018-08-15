@@ -10,6 +10,7 @@ namespace app\robot\controller;
 
 use app\robot\model\Chat as ChatModel;
 use think\worker\Server;
+use Workerman\Lib\Timer;
 
 /**
  * WorkerMan-chat-Socket控制器
@@ -20,7 +21,7 @@ class Chat extends Server
 {
 	const HEARTBEAT_TIME = 55;
 	
-	protected $socket    = 'websocket://0.0.0.0:4619';
+	protected $socket    = 'websocket://novoland.game:4619';
 	protected $processes = 1;
 	
 	/**
@@ -32,7 +33,7 @@ class Chat extends Server
 	public function onMessage ($connection, $data)
 	: void
 	{
-		// $connection->lastMessageTime = time();
+		$connection->lastMessageTime = time();
 		if ( !isset($connection->uid) ) {
 			// 没验证的话把第一个包当做uid，即客户端发送过来的uuid
 			$connection->uid = $data;
@@ -56,6 +57,9 @@ class Chat extends Server
 				'uuid'     => $connection->uid
 			]);
 			
+			return;
+		}
+		else if ( $rec_uid === 'heart_beat' ) {
 			return;
 		}
 		// 给特定uid发送
@@ -112,16 +116,16 @@ class Chat extends Server
 		$data_self['username'] = '发送给' . $data_self['rec_username'];
 		if ( isset($this->worker->uidConnections[ $rec_uid ]) ) {
 			$connection_to = $this->worker->uidConnections[ $rec_uid ];
-			$connection_to->send(\json_encode([
-				                                  'code' => 3,
-				                                  'msg'  => $msg,
-				                                  'data' => $data
-			                                  ]));
 			$connection->send(\json_encode([
 				                               'code' => 3,
 				                               'msg'  => $msg,
 				                               'data' => $data_self
 			                               ]));
+			$connection_to->send(\json_encode([
+				                                  'code' => 3,
+				                                  'msg'  => $msg,
+				                                  'data' => $data
+			                                  ]));
 			
 			return;
 		}
@@ -157,7 +161,7 @@ class Chat extends Server
 	 */
 	public function onError ($connection, $code, $msg)
 	{
-	
+		unset($this->worker->uidConnections[ $connection->uid ]);
 	}
 	
 	/**
@@ -166,7 +170,7 @@ class Chat extends Server
 	 */
 	public function onWorkerStart ($worker)
 	{
-		/*Timer::add(1, function () use ($worker) {
+		Timer::add(1, function () use ($worker) {
 			$time_now = time();
 			foreach ( $worker->connections as $connection ) {
 				// 有可能该connection还没收到过消息，则lastMessageTime设置为当前时间
@@ -179,6 +183,6 @@ class Chat extends Server
 					$connection->close();
 				}
 			}
-		});*/
+		});
 	}
 }
