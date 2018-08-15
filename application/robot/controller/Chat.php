@@ -10,6 +10,7 @@ namespace app\robot\controller;
 
 use app\robot\model\Chat as ChatModel;
 use think\worker\Server;
+use Workerman\Lib\Timer;
 
 /**
  * WorkerMan-chat-Socket控制器
@@ -32,7 +33,7 @@ class Chat extends Server
 	public function onMessage ($connection, $data)
 	: void
 	{
-		// $connection->lastMessageTime = time();
+		$connection->lastMessageTime = time();
 		if ( !isset($connection->uid) ) {
 			// 没验证的话把第一个包当做uid，即客户端发送过来的uuid
 			$connection->uid = $data;
@@ -56,6 +57,9 @@ class Chat extends Server
 				'uuid'     => $connection->uid
 			]);
 			
+			return;
+		}
+		else if ( $rec_uid === 'heart_beat' ) {
 			return;
 		}
 		// 给特定uid发送
@@ -122,6 +126,7 @@ class Chat extends Server
 				                                  'msg'  => $msg,
 				                                  'data' => $data
 			                                  ]));
+			
 			return;
 		}
 	}
@@ -156,7 +161,7 @@ class Chat extends Server
 	 */
 	public function onError ($connection, $code, $msg)
 	{
-	
+		unset($this->worker->uidConnections[ $connection->uid ]);
 	}
 	
 	/**
@@ -165,7 +170,7 @@ class Chat extends Server
 	 */
 	public function onWorkerStart ($worker)
 	{
-		/*Timer::add(1, function () use ($worker) {
+		Timer::add(1, function () use ($worker) {
 			$time_now = time();
 			foreach ( $worker->connections as $connection ) {
 				// 有可能该connection还没收到过消息，则lastMessageTime设置为当前时间
@@ -178,6 +183,6 @@ class Chat extends Server
 					$connection->close();
 				}
 			}
-		});*/
+		});
 	}
 }
