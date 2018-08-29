@@ -3,4 +3,5 @@ composer.lock
 *.log
 thinkphp
 .travis.yml
-.application/database.php
+application/database.php
+application/config.php
