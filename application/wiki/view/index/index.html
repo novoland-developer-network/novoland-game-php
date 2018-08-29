@@ -111,9 +111,11 @@
 		<!--layui-->
 		<script src="static/wiki/js/layui_s.js"></script>
 		<script>
-        var uuid,logout;
+        var uuid,logout,ws;
         uuid = "{$username} {$user_id} " + guuid();
         logout = "{:url('User/Index/logout')}";
+        ws = new WebSocket("{$ws_chat}");
+		
 		</script>
 		<!--ws-chat-->
 		<script src="static/wiki/js/wss.js"></script>

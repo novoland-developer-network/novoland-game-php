@@ -8,6 +8,7 @@
 
 namespace app\robot\controller;
 
+use think\Config;
 use think\worker\Server;
 
 /**
@@ -17,7 +18,16 @@ use think\worker\Server;
  */
 class Worker extends Server
 {
-	protected $socket = 'websocket://novoland.game:9999';
+	
+	/**
+	 * Worker constructor.
+	 * @throws \Exception
+	 */
+	public function __construct ()
+	{
+		$this->socket = Config::get('websocket.unit');
+		parent::__construct();
+	}
 	
 	/**
 	 * 收到信息
