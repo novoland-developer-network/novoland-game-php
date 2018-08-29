@@ -4,4 +4,3 @@ composer.lock
 thinkphp
 .travis.yml
 application/database.php
-application/config.php
