@@ -2,6 +2,7 @@
 
 namespace app\wiki\controller;
 
+use think\Config;
 use think\Controller;
 use think\Session;
 use think\Url;
@@ -13,6 +14,13 @@ use think\Url;
  */
 class Index extends Controller
 {
+	protected function _initialize ()
+	{
+		parent::_initialize();
+		$this->assign('ws_chat',Config::get('ws.chat'));
+		$this->assign('ws_unit',Config::get('ws.unit'));
+	}
+	
 	/**
 	 * @return mixed
 	 * @throws \think\Exception
