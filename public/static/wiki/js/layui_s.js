@@ -1,4 +1,4 @@
-layui.use('element', function(){
+layui.use('element', function () {
     var element = layui.element;
 
     //一些事件监听
@@ -7,7 +7,7 @@ layui.use('element', function(){
     // });
 });
 
-layui.use('form', function(){
+layui.use('form', function () {
     var form = layui.form;
 
     //各种基于事件的操作

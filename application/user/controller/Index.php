@@ -10,8 +10,10 @@ namespace app\user\controller;
 
 use app\robot\controller\Api;
 use app\user\model\User;
+use app\user\model\UserBbs;
 use Error;
 use think\Controller;
+use think\Db;
 use think\Loader;
 use think\Request;
 use think\Session;
@@ -56,10 +58,21 @@ class Index extends Controller
 			                 ->param();
 			$validate = Loader::validate('user');
 			if ( !$validate->scene('login')
-			               ->check($params) ) throw new Error($validate->getError(), 10301);
+			               ->check($params)
+			) {
+				throw new Error($validate->getError(), 10301);
+			}
 			
 			// 登录验证
-			$result = (new User())->login($params['username'], $params['password'],$params['bbs_id']);
+			$result = (new User())->login($params['username'], $params['password']);
+			// 判断是否需要更新论坛标识
+			if ( isset($params['bbs_id']) && !empty($params['bbs_id']) ) {
+				if ( !((new UserBbs())->bindAccount($params['username'], $params['bbs_id'])) ) {
+					throw  new Error('绑定失败，请尝试重启浏览器以重新绑定或直接使用游戏帐户登录', 10302);
+				}
+				Session::delete('bbs_id');
+			}
+			
 			if ( $result['code'] !== 0 ) throw new Error($result['msg'], $result['code']);
 			
 			Session::set('user', $result['data']);
@@ -88,7 +101,11 @@ class Index extends Controller
 	
 	/**
 	 * 注册操作
+	 * register
 	 * @return array
+	 * @throws \think\Exception
+	 * @throws \think\db\exception\BindParamException
+	 * @throws \think\exception\PDOException
 	 */
 	public function register ()
 	: array
@@ -101,19 +118,30 @@ class Index extends Controller
 			$validate = Loader::validate('User');
 			
 			if ( !$validate->scene('register')
-			               ->check($params) ) throw new Error($validate->getError(), 10311);
+			               ->check($params)
+			) {
+				throw new Error($validate->getError(), 10311);
+			}
 			
 			// 注册
-			$result = (new User)->register([
+			$users = new User;
+			$result = $users->register([
 				                               'username' => $params['username'],
 				                               'password' => $params['password'],
 				                               'mobile'   => $params['mobile'],
 				                               'email'    => $params['email'],
-				                               'qq'       => $params['qq'],
-				                               'bbs_id'   => $params['bbs_id']
+				                               'qq'       => $params['qq']
 			                               ]);
-			
-			if ( $result['code'] !== 0 ) throw new Error($result['msg'], $result['code']);
+			// 判断是否需要更新论坛标识
+			if ( isset($params['bbs_id']) && !empty($params['bbs_id']) ) {
+				if ( !((new UserBbs())->bindAccount($params['username'], $params['bbs_id'])) ) {
+					throw  new Error('绑定失败，请尝试重启浏览器以重新绑定或直接使用游戏帐户登录', 10302);
+				}
+				Session::delete('bbs_id');
+			}
+			if ( $result['code'] !== 0 ) {
+				throw new Error($result['msg'], $result['code']);
+			}
 			
 			return $result;
 		} catch ( Error $error ) {
@@ -164,10 +192,11 @@ class Index extends Controller
 		                   ->param('password');
 		
 		// 判断是否存在已绑定论坛账号的游戏账号
-		$user = new User();
-		$user_info = $user->where('bbs_id', 'eq', \md5($username))
-		                  ->find();
-		$isset_user = empty($user_info)
+		$user_info = Db::name('user u')
+		               ->join('__USER_BBS__ ub', 'u.user_id=ub.user_id')
+		               ->where('ub.bbs_email', 'eq', \md5($username))
+		               ->find();
+		$isset_user = $user_info === false || $user_info === [] || $user_info === null
 			? 0
 			: 1;
 		
@@ -180,10 +209,14 @@ class Index extends Controller
 		$result = \json_decode($json, true);
 		try {
 			// 登录验证失败
-			if ( $result['code'] !== 0 && $result['code'] !== '0' ) throw new \ErrorException($result['message'], 1);
+			if ( $result['code'] !== 0 && $result['code'] !== '0' ) {
+				throw new \ErrorException($result['message'], 1);
+			}
 			// 未绑定游戏账号
-			if ( $isset_user !== 1 ) throw new \ErrorException(\md5($username), 2);
-			Session::set('user', $user_info->toArray());
+			if ( $isset_user !== 1 ) {
+				throw new \ErrorException(\md5($username), 2);
+			}
+			Session::set('user', $user_info);
 			exit(\json_encode([
 				                  'code' => 0,
 				                  'msg'  => '登录成功，正在跳转',
@@ -191,7 +224,9 @@ class Index extends Controller
 			                  ]));
 		} catch ( \ErrorException $error_exception ) {
 			$code = $error_exception->getCode();
-			if ( $code === 2 ) Session::set('bbs_id', $error_exception->getMessage());
+			if ( $code === 2 ) {
+				Session::set('bbs_id', $error_exception->getMessage());
+			}
 			$msg = $code === 2
 				? '验证成功，需要绑定一个游戏账号'
 				: $error_exception->getMessage();

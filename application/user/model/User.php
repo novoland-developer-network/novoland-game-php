@@ -47,7 +47,7 @@ class User extends Model
 	 * @throws \think\db\exception\ModelNotFoundException
 	 * @throws \think\exception\DbException
 	 */
-	public function login (string $username, string $password, string $bbs_id)
+	public function login (string $username, string $password)
 	{
 		try {
 			$userInfo = self::issetUser($username);
@@ -55,12 +55,6 @@ class User extends Model
 			
 			$res = \password_verify($password, $userInfo['password']);
 			if ( !$res ) throw new Error('密码错误', 10102);
-			
-			// 更新bbs_id
-			$result = $this->save([
-				                      'bbs_id' => $bbs_id
-			                      ], [ 'user_id' => $userInfo['user_id'] ]);
-			if (!$result) throw new Error('论坛账号绑定失败，请稍后再试', 10103);
 			
 			return [
 				'data' => $userInfo,
