@@ -244,4 +244,15 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+	
+	// 服务端ws配置
+	'websocket' => [
+		'chat' => 'websocket://0.0.0.0:4619',
+		'unit' => 'websocket://0.0.0.0:9999'
+	],
+	// 前端ws配置
+	'ws' => [
+		'chat' => 'wss://novoland.doylee.cn/chat',
+		'unit' => 'wss://novoland.doylee.cn/unit'
+	]
 ];

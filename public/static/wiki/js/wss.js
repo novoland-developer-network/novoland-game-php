@@ -1,4 +1,4 @@
-ws = new WebSocket("ws://novoland.game:9999");
+ws = new WebSocket(wss);
 ws.onopen = function () {
     ws.send(`${uuid}`);
 };
