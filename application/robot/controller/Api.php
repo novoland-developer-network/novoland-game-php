@@ -8,6 +8,7 @@
 
 namespace app\robot\controller;
 
+use Error;
 use think\Controller;
 
 /**
@@ -26,13 +27,8 @@ class Api extends Controller
 	private static $aturl        = 'https://aip.baidubce.com/oauth/2.0/token';
 	private static $access_token = '';
 	
-	public function index ()
-	{
-		echo(self::send('1!@#$%$2y$10$FXQYkFbnirCxYg3Fo0tTgedXYKoTO3L6JpUIPssbv8htL5WqppLNO!@#$%'));
-	}
-	
 	/**
-	 * send
+	 * 发送事件
 	 * @param $content
 	 * @return bool|mixed
 	 */
@@ -46,7 +42,7 @@ class Api extends Controller
 			                       'bot_id'      => '7519',
 			                       'log_id'      => $array[1],
 			                       'request'     => [
-				                       'user_id'        => 1,
+				                       'user_id'        => 'UNIT_DEV_秋戟',
 				                       'query'          => $array[0],
 				                       'query_info'     => [
 					                       'type'   => 'TEXT',
@@ -58,19 +54,24 @@ class Api extends Controller
 				                                                       ]),
 				                       'bernard_level'  => 1
 			                       ],
-			                       'bot_session' => json_encode([
-				                                                    'session_id' => ''
-			                                                    ])
+			                       'bot_session' => \json_encode(['session_id'=>$array[1]])
 		                       ]);
-		// $bodys = '{"bot_session":"","log_id":"7758521","request":{"bernard_level":0,"client_session":"{\"client_results\":\"\", \"candidate_options\":[]}","query":"你好","query_info":{"asr_candidates":[],"source":"KEYBOARD","type":"TEXT"},"updates":"","user_id":"88888"},"bot_id":1057,"version":"2.0"}';
-		// echo $bodys;die;
-		// echo ($request);die;
-		$res = self::request_post($url, $request);
 		
-		return $res;
+		try {
+			$res = \json_decode(self::request_post($url, $request));
+			
+			// return \json_encode($res);
+			if ( $res->error_code !== 0 ) throw new Error('功能暂时无法使用，请稍后刷新页面并重试，如果总这样，请提供错误码给刀哥或乱世人魔', 30001);
+			
+			$final_res = $res->result->response->action_list[0]->say;
+			return $final_res === '我不知道应该怎么答复您。'?'我不知道应该怎么答复您。请换个方式回答或者刷新后重新测试':$final_res;
+		} catch ( Error $error ) {
+			return '[Error::' . $error->getCode() . ']' . $error->getMessage();
+		}
 	}
 	
 	/**
+	 * 设置token
 	 * @return bool|mixed
 	 */
 	private static function setAccessToken ()
@@ -101,7 +102,9 @@ class Api extends Controller
 			return false;
 		}
 		$postUrl = $url;
+		
 		$curlPost = $param;
+		
 		// 初始化curl
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $postUrl);
@@ -120,6 +123,7 @@ class Api extends Controller
 	}
 	
 	/**
+	 * 获取token
 	 * @return string
 	 */
 	public static function getAccessToken ()

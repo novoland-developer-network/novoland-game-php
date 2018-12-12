@@ -8,6 +8,7 @@
 
 namespace app\robot\controller;
 
+use think\Config;
 use think\Controller;
 
 /**
@@ -17,7 +18,7 @@ use think\Controller;
 class Index extends Controller
 {
 	/**
-	 * index
+	 * 渲染聊天页面
 	 * @return mixed
 	 * @throws \think\Exception
 	 */
@@ -25,6 +26,7 @@ class Index extends Controller
 	{
 		$client_id = password_hash(time() . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
 		
+		$this->assign('ws_unit',Config::get('ws.unit'));
 		$this->assign('client_id', $client_id);
 		
 		return $this->fetch();

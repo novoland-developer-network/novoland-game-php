@@ -29,7 +29,7 @@
 						<div class="layui-input-block">
 							<button class="layui-btn" id="sub" type="button">To-></button>
 						</div>
-						<input type="hidden" id="session_id" value="">
+						<input type="hidden" id="session_id" value="{$client_id}">
 					</div>
 				</div>
 			</form>
@@ -72,7 +72,8 @@
         });
         $(document).keyup(function (event) {
             if (event.keyCode === 13) {
-                var sendContent = $("textarea").val();
+                var session_id = $("#session_id").val();
+                var sendContent = $("textarea").val(), sendHash = sendContent + '!@#$%' + client_id + '!@#$%' + session_id;
                 var div = document.getElementById('main');
                 ws.send(sendContent);
                 $("#main").append(sendMsg(sendContent));

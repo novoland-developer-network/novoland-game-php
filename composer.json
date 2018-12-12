@@ -20,7 +20,8 @@
     "topthink/framework": "5.0.*",
     "topthink/think-captcha": "1.*",
     "topthink/think-worker": "1.0.*",
-    "ext-json": "^1.6"
+    "ext-json": "^1.6",
+    "ext-curl": "^7.2"
   },
   "autoload": {
     "psr-4": {

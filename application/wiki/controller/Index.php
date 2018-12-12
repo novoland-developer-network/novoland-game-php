@@ -14,13 +14,6 @@ use think\Url;
  */
 class Index extends Controller
 {
-	protected function _initialize ()
-	{
-		parent::_initialize();
-		$this->assign('ws_chat',Config::get('ws.chat'));
-		$this->assign('ws_unit',Config::get('ws.unit'));
-	}
-	
 	/**
 	 * @return mixed
 	 * @throws \think\Exception
@@ -32,7 +25,8 @@ class Index extends Controller
 			
 			return false;
 		}
-		
+		$this->assign('ws_chat',Config::get('ws.chat'));
+		$this->assign('ws_unit',Config::get('ws.unit'));
 		$this->assign(Session::get('user'));
 		
 		return $this->fetch();
