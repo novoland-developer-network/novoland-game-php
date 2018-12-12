@@ -3,13 +3,13 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Novoland AI Practise</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
-		<link rel="stylesheet" href="__STATIC__/robot/css/index.css">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+		<link href="__STATIC__/layui/css/layui.css" rel="stylesheet">
+		<link href="__STATIC__/robot/css/index.css" rel="stylesheet">
 	</head>
 	<body>
 		<div class="layui-container">
-			<form action="" class="layui-form">
+			<form action="" class="layui-form" id="chatForm">
 				<div class="layui-form-item">
 					<div class="layui-row">
 						<blockquote class="layui-elem-quote">这是一个实验性的功能，目的是收集更多的测试数据集来培养AI</blockquote>
@@ -21,15 +21,15 @@
 					<div class="layui-form-item">
 						<label class="layui-form-label">Text</label>
 						<div class="layui-input-block">
-							<textarea class="layui-textarea"></textarea>
+							<textarea class="layui-textarea" autofocus></textarea>
 						</div>
 					</div>
 					<div class="layui-form-item">
 						<label class="layui-form-label">To</label>
 						<div class="layui-input-block">
-							<button class="layui-btn" id="sub" type="button">To-></button>
+							<button class="layui-btn" id="sub" type="submit">To-></button>
 						</div>
-						<input type="hidden" id="session_id" value="{$client_id}">
+						<input id="session_id" type="hidden" value="{$client_id}">
 					</div>
 				</div>
 			</form>
@@ -61,7 +61,32 @@
             $("#session_id").val(e.session_id);
             div.scrollTop = div.scrollHeight;
         };
-        $("#sub").click(function () {
+        ws.onerror = function () {
+            alert('连接失败');
+            window.reload();
+        };
+        $("textarea").keydown(function (e) {
+            var et = e || window.event;
+            var keycode = et.charCode || et.keyCode;
+            if (keycode == 13) {
+                if (window.event) {
+                    window.event.returnValue = false;
+                } else {
+                    e.preventDefault(); //for firefox
+                }
+                
+                var session_id = $("#session_id").val();
+                var sendContent = $("textarea").val();
+                var sendHash = sendContent + '!@#$%' + client_id + '!@#$%' + session_id;
+                var div = document.getElementById('main');
+                ws.send(sendHash);
+                $("#main").append(sendMsg(sendContent));
+                div.scrollTop = div.scrollHeight;
+                $("textarea").focus().val("");
+            }
+        });
+        $("#chatForm").submit(function (e) {
+            e.preventDefault();
             var session_id = $("#session_id").val();
             var sendContent = $("textarea").val(), sendHash = sendContent + '!@#$%' + client_id + '!@#$%' + session_id;
             var div = document.getElementById('main');
@@ -69,18 +94,6 @@
             $("#main").append(sendMsg(sendContent));
             div.scrollTop = div.scrollHeight;
             $("textarea").focus().val("");
-        });
-        $(document).keyup(function (event) {
-            if (event.keyCode === 13) {
-                var session_id = $("#session_id").val();
-                var sendContent = $("textarea").val(), sendHash = sendContent + '!@#$%' + client_id + '!@#$%' + session_id;
-                var div = document.getElementById('main');
-                ws.send(sendContent);
-                $("#main").append(sendMsg(sendContent));
-                div.scrollTop = div.scrollHeight;
-                $("textarea").focus().val("");
-
-            }
         });
 		</script>
 		<script>
