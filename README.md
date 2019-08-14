@@ -1,2 +1,2 @@
 # novoland
-9zer.doylee.cn
+[https://novoland.doylee.cn](https://novoland.doylee.cn/)
